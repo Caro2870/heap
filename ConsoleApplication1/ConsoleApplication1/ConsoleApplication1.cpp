@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <limits>
-
+using namespace System;
 using namespace std;
 
 typedef vector<float> vflt;
@@ -64,13 +64,23 @@ void push(vflt& A, float key) { // maxHeapInsert
 }
 
 int main() {
-	vflt X;
-	push(X, 15);
-	push(X, 3);
-	push(X, 6);
-	push(X, 18);
-	push(X, 16);
 
+	vflt X;
+	int dato;
+	Random aleatorio;
+	
+	/*cout << "Ingresa dato: " << endl;
+	do {
+		cin >> dato;
+		push(X, dato);
+	}
+	while (dato != 0);*/
+
+	for (int i = 0;i < 100;i++) {
+		dato = aleatorio.Next(1, 10000)/10;
+		push(X, dato);
+	}
+	
 	while (X.size() > 0) {
 		cout << pop(X) << endl;
 	}
