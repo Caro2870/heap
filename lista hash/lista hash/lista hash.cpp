@@ -39,7 +39,7 @@ int bertand(int n) {
 typedef unsigned long ulong;
 template <typename K, typename T, T NOTHING = 0>
 class OpenHashTable {
-	vector< list< pair<K, T> > > buckets;
+	vector< list< pair<K, T>* > > buckets;
 	int cap; // capacidad del arregl
 	int len; // # de elementos insertados
 
@@ -56,21 +56,27 @@ public:
 		return sum;
 	})
 		: cap(bertand(cap)), len(0), hashFunc(hashFunc),
-		buckets(vector< list< pair<K, T> > >(cap, list< pair<K, T> >())) {}
+		buckets(vector< list< pair<K, T>* > >(cap, list< pair<K, T>* >())) {}
 
 	int size() {
 		return len;
 	}
 	void add(K key, T elem) {
 		auto index = hashFunc(key) % cap;
-		buckets[index].push_front(pair<K, T>(key, elem));
+		for (auto p : buckets[index]) {
+			if (p->first == key) {
+				p->second = elem;
+				return;
+			}
+		}
+		buckets[index].push_front(new pair<K, T>(key, elem));
 		++len;
 	}
-	void get(K key) {
+	T get(K key) {
 		auto index = hashFunc(key) % cap;
 		for (auto p : buckets[index]) {
-			if (p.first == key) {
-				return p.second;
+			if (p->first == key) {
+				return p->second;
 			}
 		}
 		return NOTHING;
@@ -78,7 +84,7 @@ public:
 	bool exists(K key) {
 		auto index = hashFunc(key) % cap;
 		for (auto p : buckets[index]) {
-			if (p.first == key) {
+			if (p->first == key) {
 				return true;
 			}
 		}
@@ -99,6 +105,11 @@ int main() {
 	cout << ht.exists("chao") << endl;
 	cout << ht.exists("hola") << endl;
 	cout << ht.exists("noexiste") << endl;
+	cout << ht.get("chao") << endl;
+	cout << ht.get("hola") << endl;
+
+	ht.add("chao", 2000);
+	cout << ht.get("chao") << endl;
 
 	system("pause");
 	return 0;
